@@ -13,6 +13,7 @@ priority_mapping = {'urgent': 3, 'high': 2, 'low': 1}
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
+    error_message = None
     if request.method == 'POST':
         role = request.form['role']
         user_id = request.form['userid']
@@ -22,14 +23,17 @@ def login():
         if role == 'employee' and authenticate_user(user_id, password, df_employees):
             print("Employee Authentication successful")
             user_sessions['user_id'] = user_id
-            
+            error_message ="login successfull"
             return redirect(url_for('dashboard'))
         elif role == 'admin' and authenticate_user(user_id, password, df_admins):
             print("Admin Authentication successful")
+            error_message ="login successfull"
             return redirect(url_for('admin_dashboard'))  # Redirect to a different page for admin
         else:
-            print("Authentication failed")
-    return render_template('login.html')
+            error_message = "Invalid Username and Password"
+
+
+    return render_template('login.html',error_message =error_message)
 
 def authenticate_user(user_id, password, df_users):
     user_id = str(user_id)

@@ -2,12 +2,11 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: rgb(148, 241, 241);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: rgb(148, 241, 241);
 }
 
 form {
@@ -15,7 +14,7 @@ form {
     padding: 20px;
     border-radius: 16px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 600px; /* Adjust the width as needed */
+    width: 600px;
     height: 300px;
 }
 
@@ -53,7 +52,6 @@ button:hover {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-/* Add your existing styles here */
 
 .btn {
     display: inline-block;
@@ -69,7 +67,3 @@ button:hover {
 .btn:hover {
     background-color: #0056b3;
 }
-
-
-/* Add more styles as necessary */
-
