@@ -1,7 +1,7 @@
 /* admin_style.css */
 body {
     font-family: Arial, sans-serif;
-    background-color: #4bfac2;
+    background-color: #9df1d7;
     padding: 20px;
 }
 
@@ -36,4 +36,26 @@ h1 {
 
 .completed tr:nth-child(even), .pending tr:nth-child(even) {
     background-color: #f2f2f2;
+}
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 15px;
+    
+}
+
+.button:hover {background-color: #3e8e41}
+
+.button:active {
+    background-color: #3e8e41;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
 }

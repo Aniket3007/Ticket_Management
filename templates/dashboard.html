@@ -4,12 +4,18 @@
     <meta charset="UTF-8">
     <title>Employee Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style1.css') }}">
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"defer></script>
 </head>
 <body>
     <h1>Employee Dashboard</h1>
     <form action="/submit_ticket" method="post">
-        <input type="text" name="ticket_content" placeholder="Enter ticket details" required>
+        <input type="text" name="ticket_content" placeholder="Enter ticket number" required>
+        <input type = "text" name ="ticket_content1" placeholder = "enter ticket details" required>
+        <select name="priority" required>
+            <option value="urgent">Urgent</option>
+            <option value="high">High</option>
+            <option value="low">Low</option>
+        </select>
         <button type="submit">Submit Ticket</button>
     </form>
 
@@ -17,7 +23,10 @@
     <div id="tickets_container">
         
     </div>
+    
+
 
     <a href="/" class="btn">Go Back to Login</a>
+    
 </body>
 </html>

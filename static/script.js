@@ -16,12 +16,22 @@ document.addEventListener("DOMContentLoaded", function() {
     function displayEmployeeTickets(tickets) {
         const container = document.getElementById('tickets_container');
         container.innerHTML = '';
-        tickets.forEach(ticket => {
+        tickets.forEach((ticket,index) => {
             const ticketDiv = document.createElement('div');
             ticketDiv.className = 'ticket';
-            ticketDiv.innerHTML = ` <p>Submitted by: ${ticket.user_id}</p><p>${ticket.content}</p><p>Status: ${ticket.completed ? 'Completed' : 'Pending'}</p>`;
+            ticketDiv.innerHTML = ` <p>Submitted by: ${ticket.user_id}</p><p>${ticket.content}</p><p>${ticket.details}</p><p>Priority: ${ticket.priority}</p><p>Created: ${ticket.creation_time}</p><p>Status: ${ticket.completed ? 'Completed' : 'Pending'}</p><button onclick="deleteTicket(${index})">Delete</button>${ticket.completed ? `<p>Completed: ${ticket.completion_time}</p>` : ''}`;
             container.appendChild(ticketDiv);
         });
+    }
+     window.deleteTicket= function(ticketIndex) {
+        fetch(`/delete_ticket/${ticketIndex}`, { method: 'DELETE' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Refresh the tickets to reflect the deletion
+                    fetchTickets(true);
+                }
+            });
     }
 
     function displayAdminTickets(tickets) {
@@ -35,6 +45,10 @@ document.addEventListener("DOMContentLoaded", function() {
             ticketDiv.className = 'ticket';
             ticketDiv.innerHTML = `<p>Submitted by: ${ticket.user_id}
                 <p>${ticket.content}</p>
+                <p>${ticket.details}</p>
+                <p>Priority: ${ticket.priority}</p>
+                <p>Created: ${ticket.creation_time}</p>
+                ${ticket.completed ? `<p>Completed: ${ticket.completion_time}</p>` : ''}
                 <input type="checkbox" ${ticket.completed ? 'checked' : ''} 
                        onchange="updateTicketStatus(this, ${index})">
             `;
