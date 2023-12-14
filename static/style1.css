@@ -1,0 +1,39 @@
+/* admin_style.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #4bfac2;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.ticket {
+    background: #fff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#tickets_container {
+    margin-bottom: 30px;
+}
+
+.completed, .pending {
+    margin-top: 20px;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.completed th, .pending th, 
+.completed td, .pending td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.completed tr:nth-child(even), .pending tr:nth-child(even) {
+    background-color: #f2f2f2;
+}

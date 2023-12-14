@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style1.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+    <h1>Employee Dashboard</h1>
+    <form action="/submit_ticket" method="post">
+        <input type="text" name="ticket_content" placeholder="Enter ticket details" required>
+        <button type="submit">Submit Ticket</button>
+    </form>
+
+    <h2>Your Tickets</h2>
+    <div id="tickets_container">
+        
+    </div>
+
+    <a href="/" class="btn">Go Back to Login</a>
+</body>
+</html>

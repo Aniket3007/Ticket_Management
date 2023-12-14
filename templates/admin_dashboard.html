@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style1.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <div id="task_counts">
+        <p>Pending Tasks: <span id="pending_count">0</span></p>
+        <p>Completed Tasks: <span id="completed_count">0</span></p>
+    </div>
+    <h2>Pending Tickets</h2>
+    <div id="pending_tickets_container"></div>
+
+    <h2>Completed Tickets</h2>
+    <div id="completed_tickets_container"></div>
+
+    <a href="/" class="btn">Go Back to Login</a>
+</body>
+</html>
