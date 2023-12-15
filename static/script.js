@@ -53,6 +53,13 @@ document.addEventListener("DOMContentLoaded", function() {
             ticketDiv.appendChild(commentsDiv);
 
             container.appendChild(ticketDiv);
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.className = 'delete-btn';
+            deleteButton.onclick = () => deleteTicket(index);
+            ticketDiv.appendChild(deleteButton);
+
+        container.appendChild(ticketDiv);
         });
     }
 
