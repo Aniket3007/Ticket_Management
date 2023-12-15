@@ -4,29 +4,37 @@
     <meta charset="UTF-8">
     <title>Employee Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style1.css') }}">
-    <script src="{{ url_for('static', filename='script.js') }}"defer></script>
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
 <body>
-    <h1>Employee Dashboard</h1>
-    <form action="/submit_ticket" method="post">
-        <input type="text" name="ticket_content" placeholder="Enter ticket number" required>
-        <input type = "text" name ="ticket_content1" placeholder = "enter ticket details" required>
-        <select name="priority" required>
-            <option value="urgent">Urgent</option>
-            <option value="high">High</option>
-            <option value="low">Low</option>
-        </select>
-        <button type="submit">Submit Ticket</button>
-    </form>
+    <header>
+        <h1>Employee Dashboard</h1>
+    </header>
+    <section class="ticket-form">
+        <form action="/submit_ticket" method="post" class="form-container">
+            <label for="ticket_number">Ticket Number:</label>
+            <input type="text" id="ticket_number" name="ticket_content" placeholder="Enter ticket number" required>
 
-    <h2>Your Tickets</h2>
-    <div id="tickets_container">
-        
-    </div>
-    
+            <label for="ticket_details">Ticket Details:</label>
+            <textarea id="ticket_details" name="ticket_content1" rows="4" placeholder="Enter ticket details" required></textarea>
 
+            <label for="priority">Priority:</label>
+            <select id="priority" name="priority" required>
+                <option value="urgent">Urgent</option>
+                <option value="high">High</option>
+                <option value="low">Low</option>
+            </select>
+            <button type="submit" class="submit-btn">Submit Ticket</button>
+        </form>
+    </section>
 
-    <a href="/" class="btn">Go Back to Login</a>
-    
+    <section class="tickets-display">
+        <h2>Your Tickets</h2>
+        <div id="tickets_container"></div>
+    </section>
+
+    <footer>
+        <a href="/" class="btn">Go Back to Login</a>
+    </footer>
 </body>
 </html>

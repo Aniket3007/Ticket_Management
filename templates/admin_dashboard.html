@@ -7,18 +7,27 @@
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
 <body>
-    <h1>Admin Dashboard</h1>
-    <div id="task_counts">
-        <p>Pending Tasks: <span id="pending_count">0</span></p>
-        <p>Completed Tasks: <span id="completed_count">0</span></p>
-    </div>
-    <h2>Pending Tickets</h2>
-    <div id="pending_tickets_container"></div>
+    <header>
+        <h1>Admin Dashboard</h1>
+    </header>
+    <section class="task-summary">
+        <div id="task_counts">
+            <p>Pending Tasks: <span id="pending_count">0</span></p>
+            <p>Completed Tasks: <span id="completed_count">0</span></p>
+        </div>
+    </section>
 
-    <h2>Completed Tickets</h2>
-    <div id="completed_tickets_container"></div>
+    <section class="tickets-list">
+        <h2>Pending Tickets</h2>
+        <div id="pending_tickets_container"></div>
 
-    <a href="/" class="btn">Go Back to Login</a>
-    <a href="https://www.gmail.com" target="_blank" class="button">Open Gmail</a>
+        <h2>Completed Tickets</h2>
+        <div id="completed_tickets_container"></div>
+    </section>
+
+    <footer>
+        <a href="/" class="btn">Go Back to Login</a>
+        <a href="https://www.gmail.com" target="_blank" class="button">Open Gmail</a>
+    </footer>
 </body>
 </html>
