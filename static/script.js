@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function() {
         container.innerHTML = '';
         tickets.forEach((ticket, index) => {
             const ticketDiv = document.createElement('div');
-            ticketDiv.className = 'ticket';
+            ticketDiv.className = 'ticket'; 
             ticketDiv.innerHTML = `<p>Submitted by: ${ticket.user_id}</p>
                                    <p>${ticket.content}</p>
                                    <p>${ticket.details}</p>
@@ -44,12 +44,14 @@ document.addEventListener("DOMContentLoaded", function() {
             // Display comments from admins
             const commentsDiv = document.createElement('div');
             commentsDiv.className = 'comments';
+            
             ticket.comments.forEach(comment => {
                 const commentP = document.createElement('p');
                 commentP.className = 'comment';
                 commentP.textContent = `Admin ${comment.admin_id} commented on ${comment.timestamp}: ${comment.comment}`;
                 commentsDiv.appendChild(commentP);
             });
+            
             ticketDiv.appendChild(commentsDiv);
 
             container.appendChild(ticketDiv);
