@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (data.success) {
                     ticket.completed = checkbox.checked;
                     ticket.status = checkbox.checked ? 'Completed' : 'In Progress';
-                    fetchTickets(false);
+                    fetchTickets(false).then(() => updateTaskCounts());
                 }
             });
     }
@@ -154,10 +154,15 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Update task counts
-    function updateTaskCounts(tickets) {
-        const completedCount = tickets.filter(ticket => ticket.completed).length;
-        const pendingCount = tickets.length - completedCount;
-        document.getElementById('completed_count').textContent = completedCount;
-        document.getElementById('pending_count').textContent = pendingCount;
+    function updateTaskCounts() {
+        fetch('/get_tickets')
+            .then(response => response.json())
+            .then(data => {
+                const tickets = data.tickets;
+                const completedCount = tickets.filter(ticket => ticket.completed).length;
+                const pendingCount = tickets.length - completedCount;
+                document.getElementById('completed_count').textContent = completedCount;
+                document.getElementById('pending_count').textContent = pendingCount;
+            });
     }
 });
