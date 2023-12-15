@@ -32,8 +32,10 @@ document.addEventListener("DOMContentLoaded", function() {
         container.innerHTML = '';
         tickets.forEach((ticket, index) => {
             const ticketDiv = document.createElement('div');
-            ticketDiv.className = 'ticket'; 
-            ticketDiv.innerHTML = `<p>Submitted by: ${ticket.user_id}</p>
+            ticketDiv.className = 'ticket';
+            const ticketContentDiv = document.createElement('div');
+            ticketContentDiv.className = 'ticket-content'; 
+            ticketContentDiv.innerHTML = `<p>Submitted by: ${ticket.user_id}</p>
                                    <p>${ticket.content}</p>
                                    <p>${ticket.details}</p>
                                    <p>Priority: ${ticket.priority}</p>
@@ -51,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 commentP.textContent = `Admin ${comment.admin_id} commented on ${comment.timestamp}: ${comment.comment}`;
                 commentsDiv.appendChild(commentP);
             });
-            
+            ticketDiv.appendChild(ticketContentDiv);
             ticketDiv.appendChild(commentsDiv);
 
             container.appendChild(ticketDiv);
@@ -59,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
             deleteButton.textContent = 'Delete';
             deleteButton.className = 'delete-btn';
             deleteButton.onclick = () => deleteTicket(index);
-            ticketDiv.appendChild(deleteButton);
+            ticketContentDiv.appendChild(deleteButton);
 
         container.appendChild(ticketDiv);
         });
@@ -75,7 +77,9 @@ document.addEventListener("DOMContentLoaded", function() {
         tickets.forEach((ticket, index) => {
             const ticketDiv = document.createElement('div');
             ticketDiv.className = 'ticket';
-            ticketDiv.innerHTML = `
+            const ticketContentDiv = document.createElement('div');
+            ticketContentDiv.className = 'ticket-content';
+            ticketContentDiv.innerHTML = `
                 <p>Submitted by: ${ticket.user_id}</p>
                 <p>${ticket.content}</p>
                 <p>${ticket.details}</p>
@@ -88,10 +92,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 checkbox.type = 'checkbox';
                 checkbox.checked = ticket.completed;
                 checkbox.onchange = () => updateTicketStatus(checkbox, ticket, index);
-                ticketDiv.appendChild(checkbox);    
+                ticketContentDiv.appendChild(checkbox);    
             // Section for comments
             const commentsSection = document.createElement('div');
-            commentsSection.className = 'comments-section';
+            commentsSection.className = 'comments';
             ticket.comments.forEach(comment => {
                 const commentDiv = document.createElement('div');
                 commentDiv.className = 'comment';
@@ -109,6 +113,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
             commentsSection.appendChild(newCommentInput);
             commentsSection.appendChild(submitCommentButton);
+            ticketDiv.appendChild(ticketContentDiv)
     
             ticketDiv.appendChild(commentsSection);
     
