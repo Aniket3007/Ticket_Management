@@ -1,6 +1,16 @@
 document.addEventListener("DOMContentLoaded", function() {
     const isEmployeeDashboard = document.getElementById('tickets_container') !== null;
     fetchTickets(isEmployeeDashboard);
+    const adminUniqueId = new URLSearchParams(window.location.search).get('unique_id');
+    let adminUserId = null;
+    function fetchAdminUserId() {
+        fetch(`/get_admin_id/${adminUniqueId}`)
+            .then(response => response.json())
+            .then(data => {
+                adminUserId = data.admin_id;
+            });
+    }
+    fetchAdminUserId();
 
     // Fetch tickets from the server
     function fetchTickets(isEmployee) {
@@ -12,6 +22,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     updateTaskCounts(data.tickets);
                 }
             });
+    
+            
     }
 
     // Display tickets for employees
@@ -102,10 +114,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Function to add a comment
     function addComment(ticketIndex, commentText) {
+        if (!adminUserId) {
+            alert('Admin user ID not found.');
+            return;
+        }
         fetch(`/add_comment/${ticketIndex}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `comment=${encodeURIComponent(commentText)}&admin_id=AdminUsername` // Replace AdminUsername with actual admin username
+            body: `comment=${encodeURIComponent(commentText)}&admin_id=${encodeURIComponent(adminUserId)}`
         })
         .then(response => response.json())
         .then(data => {
@@ -114,7 +130,6 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
-
     // Update ticket status
     function updateTicketStatus(checkbox, ticket, ticketIndex) {
         fetch(`/update_ticket/${ticketIndex}`, { method: 'POST' })

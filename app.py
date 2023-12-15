@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 import pandas as pd
 from datetime import datetime
-import uuid
+import hashlib
 app = Flask(__name__)
 admin_username  ={}
 # Load users from Excel
@@ -27,9 +27,10 @@ def login():
             return redirect(url_for('dashboard'))
         elif role == 'admin' and authenticate_user(user_id, password, df_admins):
             print("Admin Authentication successful")
-           
+            unique_id = hashlib.md5(str(datetime.now()).encode()).hexdigest()
+            admin_username[unique_id] = user_id
             error_message ="login successfull"
-            return redirect(url_for('admin_dashboard')) # Redirect to a different page for admin
+            return redirect(url_for('admin_dashboard',unique_id=unique_id)) # Redirect to a different page for admin
         else:
             error_message = "Invalid Username and Password"
 
@@ -50,7 +51,8 @@ def dashboard():
 
 @app.route('/admin_dashboard')
 def admin_dashboard():
-    return render_template('admin_dashboard.html')
+    unique_id = request.args.get('unique_id', 'Unknown')
+    return render_template('admin_dashboard.html',unique_id =unique_id)
  
 
 @app.route('/submit_ticket', methods=['POST'])
@@ -107,5 +109,11 @@ def get_comments(ticket_id):
     if 0 <= ticket_id < len(tickets):
         return {"comments": tickets[ticket_id]['comments']}
     return {"comments": []}
+@app.route('/get_admin_id/<unique_id>')
+def get_admin_id(unique_id):
+    admin_id = admin_username.get(unique_id, 'Unknown')
+    return {"admin_id": admin_id}
+
+
 if __name__ == '__main__':
     app.run(debug=True)
