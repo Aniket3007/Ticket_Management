@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const isEmployeeDashboard = document.getElementById('tickets_container') !== null;
     fetchTickets(isEmployeeDashboard);
 
+    // Fetch tickets from the server
     function fetchTickets(isEmployee) {
         fetch('/get_tickets')
             .then(response => response.json())
@@ -13,73 +14,135 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     }
 
+    // Display tickets for employees
     function displayEmployeeTickets(tickets) {
         const container = document.getElementById('tickets_container');
         container.innerHTML = '';
-        tickets.forEach((ticket,index) => {
+        tickets.forEach((ticket, index) => {
             const ticketDiv = document.createElement('div');
             ticketDiv.className = 'ticket';
-            ticketDiv.innerHTML = ` <p>Submitted by: ${ticket.user_id}</p><p>${ticket.content}</p><p>${ticket.details}</p><p>Priority: ${ticket.priority}</p><p>Created: ${ticket.creation_time}</p><p>Status: ${ticket.completed ? 'Completed' : 'Pending'}</p><button onclick="deleteTicket(${index})">Delete</button>${ticket.completed ? `<p>Completed: ${ticket.completion_time}</p>` : ''}`;
+            ticketDiv.innerHTML = `<p>Submitted by: ${ticket.user_id}</p>
+                                   <p>${ticket.content}</p>
+                                   <p>${ticket.details}</p>
+                                   <p>Priority: ${ticket.priority}</p>
+                                   <p>Created: ${ticket.creation_time}</p>
+                                   <p>Status: ${ticket.status}</p>
+                                   ${ticket.completed && ticket.completion_time ? `<p>Completed: ${ticket.completion_time}</p>` : ''}`;
+
+            // Display comments from admins
+            const commentsDiv = document.createElement('div');
+            commentsDiv.className = 'comments';
+            ticket.comments.forEach(comment => {
+                const commentP = document.createElement('p');
+                commentP.className = 'comment';
+                commentP.textContent = `Admin ${comment.admin_id} commented on ${comment.timestamp}: ${comment.comment}`;
+                commentsDiv.appendChild(commentP);
+            });
+            ticketDiv.appendChild(commentsDiv);
+
             container.appendChild(ticketDiv);
         });
     }
-     window.deleteTicket= function(ticketIndex) {
-        fetch(`/delete_ticket/${ticketIndex}`, { method: 'DELETE' })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Refresh the tickets to reflect the deletion
-                    fetchTickets(true);
-                }
-            });
-    }
 
+    // Display tickets for admins
     function displayAdminTickets(tickets) {
         const pendingContainer = document.getElementById('pending_tickets_container');
         const completedContainer = document.getElementById('completed_tickets_container');
         pendingContainer.innerHTML = '';
         completedContainer.innerHTML = '';
-
+    
         tickets.forEach((ticket, index) => {
             const ticketDiv = document.createElement('div');
             ticketDiv.className = 'ticket';
-            ticketDiv.innerHTML = `<p>Submitted by: ${ticket.user_id}
+            ticketDiv.innerHTML = `
+                <p>Submitted by: ${ticket.user_id}</p>
                 <p>${ticket.content}</p>
                 <p>${ticket.details}</p>
                 <p>Priority: ${ticket.priority}</p>
                 <p>Created: ${ticket.creation_time}</p>
-                ${ticket.completed ? `<p>Completed: ${ticket.completion_time}</p>` : ''}
-                <input type="checkbox" ${ticket.completed ? 'checked' : ''} 
-                       onchange="updateTicketStatus(this, ${index})">
-            `;
+                <p>Status: ${ticket.status}</p>`;
+                
+    
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = ticket.completed;
+                checkbox.onchange = () => updateTicketStatus(checkbox, ticket, index);
+                ticketDiv.appendChild(checkbox);    
+            // Section for comments
+            const commentsSection = document.createElement('div');
+            commentsSection.className = 'comments-section';
+            ticket.comments.forEach(comment => {
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'comment';
+                commentDiv.textContent = `${comment.admin_id}: ${comment.comment} (${comment.timestamp})`;
+                commentsSection.appendChild(commentDiv);
+            });
+    
+            // Input for new comments
+            const newCommentInput = document.createElement('input');
+            newCommentInput.type = 'text';
+            newCommentInput.placeholder = 'Add a comment...';
+            const submitCommentButton = document.createElement('button');
+            submitCommentButton.textContent = 'Add Comment';
+            submitCommentButton.onclick = () => addComment(index, newCommentInput.value);
+    
+            commentsSection.appendChild(newCommentInput);
+            commentsSection.appendChild(submitCommentButton);
+    
+            ticketDiv.appendChild(commentsSection);
+    
+            // Append the ticket to the correct container based on its status
+            ticket.status === 'Completed' ? completedContainer.appendChild(ticketDiv) : pendingContainer.appendChild(ticketDiv);
+        });
+    }
+    
+    // Function to update ticket status
+    
+    
 
-            ticket.completed ? completedContainer.appendChild(ticketDiv) : pendingContainer.appendChild(ticketDiv);
+    // Function to add a comment
+    function addComment(ticketIndex, commentText) {
+        fetch(`/add_comment/${ticketIndex}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `comment=${encodeURIComponent(commentText)}&admin_id=AdminUsername` // Replace AdminUsername with actual admin username
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                fetchTickets(false);
+            }
         });
     }
 
+    // Update ticket status
+    function updateTicketStatus(checkbox, ticket, ticketIndex) {
+        fetch(`/update_ticket/${ticketIndex}`, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    ticket.completed = checkbox.checked;
+                    ticket.status = checkbox.checked ? 'Completed' : 'In Progress';
+                    fetchTickets(false);
+                }
+            });
+    }
+    // Function to delete a ticket
+    window.deleteTicket = function(ticketIndex) {
+        fetch(`/delete_ticket/${ticketIndex}`, { method: 'DELETE' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    fetchTickets(true);
+                }
+            });
+    }
+
+    // Update task counts
     function updateTaskCounts(tickets) {
         const completedCount = tickets.filter(ticket => ticket.completed).length;
         const pendingCount = tickets.length - completedCount;
-
         document.getElementById('completed_count').textContent = completedCount;
         document.getElementById('pending_count').textContent = pendingCount;
     }
 });
-
-function updateTicketStatus(checkbox, ticketIndex) {
-    fetch(`/update_ticket/${ticketIndex}`, {method: 'POST'})
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Move the ticket to the correct container
-                const ticketDiv = checkbox.closest('.ticket');
-                if (checkbox.checked) {
-                    document.getElementById('completed_tickets_container').appendChild(ticketDiv);
-                } else {
-                    document.getElementById('pending_tickets_container').appendChild(ticketDiv);
-                }
-                // Fetch the updated list of tickets to refresh the task counts
-                fetchTickets(false);
-            }
-        });
-}

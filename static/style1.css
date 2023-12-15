@@ -63,3 +63,14 @@ textarea {
     border-radius: 4px;
     resize: vertical;
 }
+.comments {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.comment {
+    font-size: 0.9em;
+    margin-top: 5px;
+}
