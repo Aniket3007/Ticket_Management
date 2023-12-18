@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
             ticketContentDiv.className = 'ticket-content'; 
             ticketContentDiv.innerHTML = `<p>Submitted by: ${ticket.user_id}</p>
                                    <p>${ticket.content}</p>
+                                   <p>${ticket.subject}</p>
                                    <p>${ticket.details}</p>
                                    <p>Priority: ${ticket.priority}</p>
                                    <p>Created: ${ticket.creation_time}</p>
@@ -82,6 +83,7 @@ document.addEventListener("DOMContentLoaded", function() {
             ticketContentDiv.innerHTML = `
                 <p>Submitted by: ${ticket.user_id}</p>
                 <p>${ticket.content}</p>
+                <p>${ticket.subject}</p>
                 <p>${ticket.details}</p>
                 <p>Priority: ${ticket.priority}</p>
                 <p>Created: ${ticket.creation_time}</p>

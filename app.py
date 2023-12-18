@@ -4,12 +4,14 @@ from datetime import datetime
 import hashlib
 app = Flask(__name__)
 admin_username  ={}
+last_ticket_number = 0
 # Load users from Excel
 df_employees = pd.read_excel('employees.xlsx')
 df_admins = pd.read_excel('users.xlsx')
 tickets = []
 user_sessions = {}
 priority_mapping = {'urgent': 3, 'high': 2, 'low': 1}
+ticket_subjects = ['IT Issue', 'HR Issue', 'General Inquiry', 'Facilities']
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -57,15 +59,19 @@ def admin_dashboard():
 
 @app.route('/submit_ticket', methods=['POST'])
 def submit_ticket():
-    ticket_content = request.form['ticket_content']
+    
     ticket1 = request.form['ticket_content1']
     priority = request.form['priority']
+    global last_ticket_number
+    ticket_subject = request.form['ticket_subject']
+    last_ticket_number += 1
+    ticket_number = f"{last_ticket_number:04d}" 
    
     print(ticket1)
     user_id1 = user_sessions.get('user_id', 'Unknown')
     creation_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print(user_id1)
-    tickets.append({"content": ticket_content,"comments": [],"details":ticket1,"priority": priority,"status": "Pending", "completed": False, "user_id": user_id1,"creation_time":creation_time,"completion_time":None})
+    tickets.append({"content": ticket_number,"subject":ticket_subject,"comments": [],"details":ticket1,"priority": priority,"status": "Pending", "completed": False, "user_id": user_id1,"creation_time":creation_time,"completion_time":None})
     return redirect(url_for('dashboard'))
 
 @app.route('/update_ticket/<int:ticket_id>', methods=['POST'])

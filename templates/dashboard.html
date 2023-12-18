@@ -12,9 +12,14 @@
     </header>
     <section class="ticket-form">
         <form action="/submit_ticket" method="post" class="form-container">
-            <label for="ticket_number">Ticket Number:</label>
-            <input type="text" id="ticket_number" name="ticket_content" placeholder="Enter ticket number" required>
-
+            <label for="ticket_subject">Ticket Subject:</label>
+            <select id="ticket_subject" name="ticket_subject">
+                <option value="IT Issue">IT Issue</option>
+                <option value="HR Issue">HR Issue</option>
+                <option value="General Inquiry">General Inquiry</option>
+                <option value="Facilities">Facilities</option>
+            </select>
+        
             <label for="ticket_details">Ticket Details:</label>
             <textarea id="ticket_details" name="ticket_content1" rows="4" placeholder="Enter ticket details" required></textarea>
 
