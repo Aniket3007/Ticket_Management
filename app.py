@@ -30,7 +30,7 @@ def login():
             unique_id = hashlib.md5(str(datetime.now()).encode()).hexdigest()
             admin_username[unique_id] = user_id
             error_message ="login successfull"
-            return redirect(url_for('admin_dashboard',unique_id=unique_id)) # Redirect to a different page for admin
+            return redirect(url_for('admin_dashboard',unique_id=unique_id)) 
         else:
             error_message = "Invalid Username and Password"
 
@@ -47,7 +47,7 @@ def authenticate_user(user_id, password, df_users):
 
 @app.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html')  # Employee dashboard
+    return render_template('dashboard.html')  
 
 @app.route('/admin_dashboard')
 def admin_dashboard():
@@ -73,7 +73,7 @@ def update_ticket(ticket_id):
     if 0 <= ticket_id < len(tickets):
         tickets[ticket_id]['completed'] = not tickets[ticket_id]['completed']
         if tickets[ticket_id]['completed']:
-            tickets[ticket_id]['status'] = 'Completed'  # Update status to Completed
+            tickets[ticket_id]['status'] = 'Completed' 
             tickets[ticket_id]['completion_time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         return ({"success": True})
     return ({"success": False})
@@ -98,7 +98,7 @@ def add_comment(ticket_id):
         admin_id = request.form['admin_id']
         tickets[ticket_id]['comments'].append({"admin_id": admin_id, "comment": comment, "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
         
-        if tickets[ticket_id].get('status') == 'Pending':  # Change status to In Progress on first comment
+        if tickets[ticket_id].get('status') == 'Pending':  
             tickets[ticket_id]['status'] = 'In Progress'
 
         return {"success": True}

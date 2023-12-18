@@ -85,7 +85,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 <p>${ticket.details}</p>
                 <p>Priority: ${ticket.priority}</p>
                 <p>Created: ${ticket.creation_time}</p>
-                <p>Status: ${ticket.status}</p>`;
+                <p>Status: ${ticket.status}</p>
+                ${ticket.completed ? `<p>Completed: ${ticket.completion_time}</p>` : ''}`;
                 
     
                 const checkbox = document.createElement('input');

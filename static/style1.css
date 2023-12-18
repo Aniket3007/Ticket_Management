@@ -28,15 +28,15 @@ h1 {
 }
 
 .ticket {
-    background-color: #ffffff; /* White background */
-    border: 1px solid #ddd; /* Light grey border */
+    background-color: #ffffff;
+    border: 1px solid #ddd; 
     padding: 10px;
     margin-top: 10px;
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    border-radius: 10px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
     width: 95%; /* Full width */
     display: flex; /* Set ticket to use Flexbox */
-    justify-content: space-between; /* Space out children */
+    justify-content: space-between; 
     align-items: flex-start; /*
     
     
@@ -70,10 +70,10 @@ textarea {
     resize: vertical;
 }
 .comments {
-    width: 30%; /* Adjust as necessary */
+    width: 30%; 
     padding: 10px;
-    background-color: #f0f0f0; /* Light gray background */
-    border-radius: 5px; /* Rounded corners */
+    background-color: #f0f0f0; 
+    border-radius: 5px; 
     height: fit-content;
 }
 
@@ -84,6 +84,6 @@ textarea {
 .ticket-content
 {
 
-    width: 70%; /* Adjust as necessary */
+    width: 70%; 
     padding: 10px;
 }
