@@ -119,7 +119,15 @@ def get_comments(ticket_id):
 def get_admin_id(unique_id):
     admin_id = admin_username.get(unique_id, 'Unknown')
     return {"admin_id": admin_id}
-
+@app.route('/reopen_ticket/<int:ticket_id>', methods=['POST'])
+def reopen_ticket(ticket_id):
+    if 0 <= ticket_id < len(tickets):
+        ticket = tickets[ticket_id]
+        ticket['status'] = 'Reopened'
+        ticket['reopened_count'] = ticket.get('reopened_count', 0) + 1
+        ticket['completed'] = False
+        return {"success": True}
+    return {"success": False}
 
 if __name__ == '__main__':
     app.run(debug=True)
