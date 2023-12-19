@@ -51,7 +51,7 @@ h1 {
 }
 
 .ticket[data-priority="low"] {
-    background-color: #e7f4ba; /* Light yellow for low priority tickets */
+    background-color: #eaf4ba; /* Light yellow for low priority tickets */
 }
 
 .ticket[data-completed="true"] {
