@@ -47,6 +47,13 @@ document.addEventListener("DOMContentLoaded", function() {
             // Display comments from admins
             const commentsDiv = document.createElement('div');
             commentsDiv.className = 'comments';
+            if (ticket.status === 'Completed') {
+                const reopenButton = document.createElement('button');
+                reopenButton.textContent = 'Reopen Ticket';
+                reopenButton.className ="reopen"
+                reopenButton.onclick = () => reopenTicket(index);
+                ticketDiv.appendChild(reopenButton);
+            }
             
             ticket.comments.forEach(comment => {
                 const commentP = document.createElement('p');
@@ -72,6 +79,8 @@ document.addEventListener("DOMContentLoaded", function() {
     function displayAdminTickets(tickets) {
         const pendingContainer = document.getElementById('pending_tickets_container');
         const completedContainer = document.getElementById('completed_tickets_container');
+        const reopenedContainer = document.getElementById('reopened_tickets_container');
+        reopenedContainer.innerHTML = '';
         pendingContainer.innerHTML = '';
         completedContainer.innerHTML = '';
     
@@ -95,7 +104,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 checkbox.type = 'checkbox';
                 checkbox.checked = ticket.completed;
                 checkbox.onchange = () => updateTicketStatus(checkbox, ticket, index);
-                ticketContentDiv.appendChild(checkbox);    
+                ticketContentDiv.appendChild(checkbox);
+                    
             // Section for comments
             const commentsSection = document.createElement('div');
             commentsSection.className = 'comments';
@@ -121,7 +131,13 @@ document.addEventListener("DOMContentLoaded", function() {
             ticketDiv.appendChild(commentsSection);
     
             // Append the ticket to the correct container based on its status
-            ticket.status === 'Completed' ? completedContainer.appendChild(ticketDiv) : pendingContainer.appendChild(ticketDiv);
+            if (ticket.status === 'Reopened') {
+                // Add reopened ticket to the reopened tickets container
+                reopenedContainer.appendChild(ticketDiv);
+            } else {
+                // Append the ticket to the correct container based on its status
+                ticket.status === 'Completed' ? completedContainer.appendChild(ticketDiv) : pendingContainer.appendChild(ticketDiv);
+            }
         });
     }
     
@@ -162,6 +178,15 @@ document.addEventListener("DOMContentLoaded", function() {
     // Function to delete a ticket
     window.deleteTicket = function(ticketIndex) {
         fetch(`/delete_ticket/${ticketIndex}`, { method: 'DELETE' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    fetchTickets(true);
+                }
+            });
+    }
+    function reopenTicket(ticketIndex) {
+        fetch(`/reopen_ticket/${ticketIndex}`, { method: 'POST' })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
