@@ -18,6 +18,17 @@
     </section>
 
     <section class="tickets-list">
+        <h2>Tickets</h2>
+        <select id="ticket_filter" onchange="applyFilter()">
+            <option value="all">All</option>
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+            <option value="deleted">Deleted</option>
+            <option value="reopened">Reopened</option>
+            <option value="urgent">Urgent</option>
+            <option value="high">High</option>
+            <option value="low">Low</option>
+        </select>
         <h2>Pending Tickets</h2>
         <div id="pending_tickets_container"></div>
         <div id="reopened_tickets_container">
