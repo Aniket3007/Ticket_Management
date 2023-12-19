@@ -34,15 +34,16 @@ document.addEventListener("DOMContentLoaded", function() {
             const ticketDiv = document.createElement('div');
             ticketDiv.className = 'ticket';
             const ticketContentDiv = document.createElement('div');
-            ticketContentDiv.className = 'ticket-content'; 
+            ticketContentDiv.className = 'ticket-content';
+            let reopenedInfo = ticket.reopened_count ? `<p>Reopened Count: ${ticket.reopened_count}</p>` : ''; 
             ticketContentDiv.innerHTML = `<p>Submitted by: ${ticket.user_id}</p>
                                    <p>${ticket.content}</p>
                                    <p>${ticket.subject}</p>
                                    <p>${ticket.details}</p>
                                    <p>Priority: ${ticket.priority}</p>
                                    <p>Created: ${ticket.creation_time}</p>
-                                   <p>Status: ${ticket.status}</p>
-                                   ${ticket.completed && ticket.completion_time ? `<p>Completed: ${ticket.completion_time}</p>` : ''}`;
+                                   <p>Status: ${ticket.status}</p>`+ reopenedInfo +
+                                   (ticket.completed && ticket.completion_time ? `<p>Completed: ${ticket.completion_time}</p>` : '');
 
             // Display comments from admins
             const commentsDiv = document.createElement('div');
@@ -87,6 +88,7 @@ document.addEventListener("DOMContentLoaded", function() {
         tickets.forEach((ticket, index) => {
             const ticketDiv = document.createElement('div');
             ticketDiv.className = 'ticket';
+            let reopenedInfo = ticket.reopened_count ? `<p>Reopened Count: ${ticket.reopened_count}</p>` : ''; 
             const ticketContentDiv = document.createElement('div');
             ticketContentDiv.className = 'ticket-content';
             ticketContentDiv.innerHTML = `
@@ -96,8 +98,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 <p>${ticket.details}</p>
                 <p>Priority: ${ticket.priority}</p>
                 <p>Created: ${ticket.creation_time}</p>
-                <p>Status: ${ticket.status}</p>
-                ${ticket.completed ? `<p>Completed: ${ticket.completion_time}</p>` : ''}`;
+                <p>Status: ${ticket.status}</p>`+ reopenedInfo +
+                                   (ticket.completed && ticket.completion_time ? `<p>Completed: ${ticket.completion_time}</p>` : '');
+
                 
     
                 const checkbox = document.createElement('input');
