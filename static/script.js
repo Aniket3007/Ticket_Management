@@ -13,8 +13,8 @@ document.addEventListener("DOMContentLoaded", function() {
     fetchAdminUserId();
 
     // Fetch tickets from the server
-    function fetchTickets(isEmployee) {
-        fetch('/get_tickets')
+    function fetchTickets(isEmployee, filter = 'all') {
+        fetch(`/get_tickets?filter=${filter}`)
             .then(response => response.json())
             .then(data => {
                 isEmployee ? displayEmployeeTickets(data.tickets) : displayAdminTickets(data.tickets);
@@ -22,10 +22,14 @@ document.addEventListener("DOMContentLoaded", function() {
                     updateTaskCounts(data.tickets);
                 }
             });
-    
-            
     }
+    fetchTickets(isEmployeeDashboard);
 
+    // Function to handle filter change
+    window.applyFilter = function() {
+        const filterValue = document.getElementById('ticket_filter').value;
+        fetchTickets(isEmployeeDashboard, filterValue);
+    };
     // Display tickets for employees
     function displayEmployeeTickets(tickets) {
         const container = document.getElementById('tickets_container');
@@ -200,6 +204,10 @@ document.addEventListener("DOMContentLoaded", function() {
                     fetchTickets(true);
                 }
             });
+    }
+    function applyFilter() {
+        const filterValue = document.getElementById('ticket_filter').value;
+        fetchTickets(isEmployeeDashboard, filterValue);
     }
 
     // Update task counts
