@@ -35,6 +35,8 @@ document.addEventListener("DOMContentLoaded", function() {
             ticketDiv.className = 'ticket';
             const ticketContentDiv = document.createElement('div');
             ticketContentDiv.className = 'ticket-content';
+            ticketDiv.setAttribute('data-priority', ticket.priority);
+            ticketDiv.setAttribute('data-completed', ticket.completed);
             let reopenedInfo = ticket.reopened_count ? `<p>Reopened Count: ${ticket.reopened_count}</p>` : ''; 
             ticketContentDiv.innerHTML = `<p>Submitted by: ${ticket.user_id}</p>
                                    <p>${ticket.content}</p>
@@ -88,6 +90,8 @@ document.addEventListener("DOMContentLoaded", function() {
         tickets.forEach((ticket, index) => {
             const ticketDiv = document.createElement('div');
             ticketDiv.className = 'ticket';
+            ticketDiv.setAttribute('data-priority', ticket.priority);
+            ticketDiv.setAttribute('data-completed', ticket.completed);
             let reopenedInfo = ticket.reopened_count ? `<p>Reopened Count: ${ticket.reopened_count}</p>` : ''; 
             const ticketContentDiv = document.createElement('div');
             ticketContentDiv.className = 'ticket-content';
