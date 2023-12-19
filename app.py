@@ -83,20 +83,34 @@ def update_ticket(ticket_id):
             tickets[ticket_id]['completion_time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         return ({"success": True})
     return ({"success": False})
+
+
+# ...
+
 @app.route('/get_tickets')
 def get_tickets():
+    filter_type = request.args.get('filter', 'all').lower()
     sorted_tickets = sorted(tickets, key=lambda x: priority_mapping.get(x['priority'], 0), reverse=True)
+
+    if filter_type != 'all':
+        if filter_type in ['pending', 'completed', 'reopened', 'deleted']:
+            sorted_tickets = [ticket for ticket in sorted_tickets if ticket['status'].lower() == filter_type]
+        else:  # Filter by priority
+            sorted_tickets = [ticket for ticket in sorted_tickets if ticket['priority'] == filter_type]
+
     formatted_tickets = [{**ticket, 
                           "creation_time": str(ticket["creation_time"]), 
                           "completion_time": str(ticket["completion_time"]) if ticket["completion_time"] else None} 
                          for ticket in sorted_tickets]
     return {"tickets": formatted_tickets}
+
 @app.route('/delete_ticket/<int:ticket_id>', methods=['DELETE'])
 def delete_ticket(ticket_id):
     if 0 <= ticket_id < len(tickets):
-        del tickets[ticket_id]
+        tickets[ticket_id]['status'] = 'Deleted'
         return {"success": True}
     return {"success": False}
+
 @app.route('/add_comment/<int:ticket_id>', methods=['POST'])
 def add_comment(ticket_id):
     if 0 <= ticket_id < len(tickets):
