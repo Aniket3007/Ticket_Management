@@ -13,8 +13,8 @@ document.addEventListener("DOMContentLoaded", function() {
     fetchAdminUserId();
 
     // Fetch tickets from the server
-    function fetchTickets(isEmployee, filter = 'all') {
-        fetch(`/get_tickets?filter=${filter}`)
+    function fetchTickets(isEmployee, filter = 'all', search = '') {
+        fetch(`/get_tickets?filter=${filter}&search=${search}`)
             .then(response => response.json())
             .then(data => {
                 isEmployee ? displayEmployeeTickets(data.tickets) : displayAdminTickets(data.tickets);
@@ -23,12 +23,17 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             });
     }
+    
     fetchTickets(isEmployeeDashboard);
 
     // Function to handle filter change
     window.applyFilter = function() {
         const filterValue = document.getElementById('ticket_filter').value;
         fetchTickets(isEmployeeDashboard, filterValue);
+    };
+    window.applySearch = function() {
+        const searchQuery = document.getElementById('ticket_search').value;
+        fetchTickets(isEmployeeDashboard, 'all', searchQuery);
     };
     // Display tickets for employees
     function displayEmployeeTickets(tickets) {
@@ -133,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function() {
             newCommentInput.placeholder = 'Add a comment...';
             const submitCommentButton = document.createElement('button');
             submitCommentButton.textContent = 'Add Comment';
-            submitCommentButton.onclick = () => addComment(index, newCommentInput.value);
+            submitCommentButton.onclick = () => addComment(ticket.content, newCommentInput.value);
     
             commentsSection.appendChild(newCommentInput);
             commentsSection.appendChild(submitCommentButton);
@@ -157,12 +162,13 @@ document.addEventListener("DOMContentLoaded", function() {
     
 
     // Function to add a comment
-    function addComment(ticketIndex, commentText) {
+    function addComment(ticketNumber, commentText) {
         if (!adminUserId) {
             alert('Admin user ID not found.');
             return;
         }
-        fetch(`/add_comment/${ticketIndex}`, {
+        console.log("Adding comment to ticket number:", ticketNumber);
+        fetch(`/add_comment/${ticketNumber}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: `comment=${encodeURIComponent(commentText)}&admin_id=${encodeURIComponent(adminUserId)}`
@@ -170,10 +176,12 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                fetchTickets(false);
+                console.log("Comment added successfully");
+                fetchTickets(isEmployeeDashboard);
             }
         });
     }
+    
     // Update ticket status
     function updateTicketStatus(checkbox, ticket, ticketIndex) {
         fetch(`/update_ticket/${ticketIndex}`, { method: 'POST' })
