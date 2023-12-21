@@ -35,6 +35,9 @@
 
     <section class="tickets-display">
         <h2>Your Tickets</h2>
+        <input type="text" id="ticket_search" placeholder="Search ticket details...">
+        <button onclick="applySearch()">Search</button>
+
         <select id="ticket_filter" onchange="applyFilter()">
             <option value="all">All</option>
             <option value="pending">Pending</option>
