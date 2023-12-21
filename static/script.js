@@ -39,6 +39,10 @@ document.addEventListener("DOMContentLoaded", function() {
     function displayEmployeeTickets(tickets) {
         const container = document.getElementById('tickets_container');
         container.innerHTML = '';
+        if (tickets.length === 0) {
+            container.innerHTML = '<p>No entries are available.</p>';
+            return;
+        }
         tickets.forEach((ticket, index) => {
             const ticketDiv = document.createElement('div');
             ticketDiv.className = 'ticket';
@@ -95,6 +99,12 @@ document.addEventListener("DOMContentLoaded", function() {
         reopenedContainer.innerHTML = '';
         pendingContainer.innerHTML = '';
         completedContainer.innerHTML = '';
+        if (tickets.length === 0) {
+            const noEntriesMsg = document.createElement('p');
+            noEntriesMsg.textContent = 'No entries are available.';
+            pendingContainer.appendChild(noEntriesMsg);
+            return;
+        }
     
         tickets.forEach((ticket, index) => {
             const ticketDiv = document.createElement('div');
