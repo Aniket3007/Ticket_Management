@@ -90,19 +90,26 @@ def update_ticket(ticket_id):
 @app.route('/get_tickets')
 def get_tickets():
     filter_type = request.args.get('filter', 'all').lower()
+    search_query = request.args.get('search', '').lower()
     sorted_tickets = sorted(tickets, key=lambda x: priority_mapping.get(x['priority'], 0), reverse=True)
 
+    # Filter based on the filter type
     if filter_type != 'all':
         if filter_type in ['pending', 'completed', 'reopened', 'deleted']:
             sorted_tickets = [ticket for ticket in sorted_tickets if ticket['status'].lower() == filter_type]
-        else:  # Filter by priority
+        else:
             sorted_tickets = [ticket for ticket in sorted_tickets if ticket['priority'] == filter_type]
+
+    # Further filter based on the search query
+    if search_query:
+        sorted_tickets = [ticket for ticket in sorted_tickets if search_query in ticket['details'].lower()]
 
     formatted_tickets = [{**ticket, 
                           "creation_time": str(ticket["creation_time"]), 
                           "completion_time": str(ticket["completion_time"]) if ticket["completion_time"] else None} 
                          for ticket in sorted_tickets]
     return {"tickets": formatted_tickets}
+
 
 @app.route('/delete_ticket/<int:ticket_id>', methods=['DELETE'])
 def delete_ticket(ticket_id):
@@ -111,16 +118,17 @@ def delete_ticket(ticket_id):
         return {"success": True}
     return {"success": False}
 
-@app.route('/add_comment/<int:ticket_id>', methods=['POST'])
-def add_comment(ticket_id):
-    if 0 <= ticket_id < len(tickets):
+@app.route('/add_comment/<ticket_number>', methods=['POST'])
+def add_comment(ticket_number):
+    # Find the ticket by its unique ticket_number
+    ticket = next((ticket for ticket in tickets if ticket['content'] == ticket_number), None)
+    if ticket:
         comment = request.form['comment']
         admin_id = request.form['admin_id']
-        tickets[ticket_id]['comments'].append({"admin_id": admin_id, "comment": comment, "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
+        ticket['comments'].append({"admin_id": admin_id, "comment": comment, "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
         
-        if tickets[ticket_id].get('status') == 'Pending':  
-            tickets[ticket_id]['status'] = 'In Progress'
-
+        if ticket.get('status') == 'Pending':  
+            ticket['status'] = 'In Progress'
         return {"success": True}
     return {"success": False}
 
@@ -144,4 +152,4 @@ def reopen_ticket(ticket_id):
     return {"success": False}
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,host='0.0.0.0')
