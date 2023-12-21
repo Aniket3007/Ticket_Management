@@ -74,17 +74,19 @@ def submit_ticket():
     tickets.append({"content": ticket_number,"subject":ticket_subject,"comments": [],"details":ticket1,"priority": priority,"status": "Pending", "completed": False, "user_id": user_id1,"creation_time":creation_time,"completion_time":None})
     return redirect(url_for('dashboard'))
 
-@app.route('/update_ticket/<int:ticket_id>', methods=['POST'])
-def update_ticket(ticket_id):
-    if 0 <= ticket_id < len(tickets):
-        tickets[ticket_id]['completed'] = not tickets[ticket_id]['completed']
-        if tickets[ticket_id]['completed']:
-            tickets[ticket_id]['status'] = 'Completed' 
-            tickets[ticket_id]['completion_time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        return ({"success": True})
-    return ({"success": False})
-
-
+@app.route('/update_ticket/<ticket_number>', methods=['POST'])
+def update_ticket(ticket_number):
+    ticket = next((t for t in tickets if t['content'] == ticket_number), None)
+    if ticket:
+        ticket['completed'] = not ticket['completed']
+        if ticket['completed']:
+            ticket['status'] = 'Completed'
+            ticket['completion_time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        else:
+            ticket['status'] = 'In Progress'
+        print(f"Ticket {ticket_number} updated: Completed status - {ticket['completed']}")
+        return {"success": True}
+    return {"success": False}
 # ...
 
 @app.route('/get_tickets')
@@ -111,10 +113,12 @@ def get_tickets():
     return {"tickets": formatted_tickets}
 
 
-@app.route('/delete_ticket/<int:ticket_id>', methods=['DELETE'])
-def delete_ticket(ticket_id):
-    if 0 <= ticket_id < len(tickets):
-        tickets[ticket_id]['status'] = 'Deleted'
+@app.route('/delete_ticket/<ticket_number>', methods=['DELETE'])
+def delete_ticket(ticket_number):
+    ticket = next((t for t in tickets if t['content'] == ticket_number), None)
+    if ticket:
+        ticket['status'] = 'Deleted'
+        print(f"Ticket {ticket_number} deleted.")
         return {"success": True}
     return {"success": False}
 
@@ -141,15 +145,17 @@ def get_comments(ticket_id):
 def get_admin_id(unique_id):
     admin_id = admin_username.get(unique_id, 'Unknown')
     return {"admin_id": admin_id}
-@app.route('/reopen_ticket/<int:ticket_id>', methods=['POST'])
-def reopen_ticket(ticket_id):
-    if 0 <= ticket_id < len(tickets):
-        ticket = tickets[ticket_id]
+@app.route('/reopen_ticket/<ticket_number>', methods=['POST'])
+def reopen_ticket(ticket_number):
+    ticket = next((t for t in tickets if t['content'] == ticket_number), None)
+    if ticket:
         ticket['status'] = 'Reopened'
         ticket['reopened_count'] = ticket.get('reopened_count', 0) + 1
         ticket['completed'] = False
+        print(f"Ticket {ticket_number} reopened.")
         return {"success": True}
     return {"success": False}
+
 
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0')

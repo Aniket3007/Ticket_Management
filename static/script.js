@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 const reopenButton = document.createElement('button');
                 reopenButton.textContent = 'Reopen Ticket';
                 reopenButton.className ="reopen"
-                reopenButton.onclick = () => reopenTicket(index);
+                reopenButton.onclick = () => reopenTicket(ticket.content);
                 ticketDiv.appendChild(reopenButton);
             }
             
@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Delete';
             deleteButton.className = 'delete-btn';
-            deleteButton.onclick = () => deleteTicket(index);
+            deleteButton.onclick = () => deleteTicket(ticket.content);
             ticketContentDiv.appendChild(deleteButton);
 
         container.appendChild(ticketDiv);
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.checked = ticket.completed;
-                checkbox.onchange = () => updateTicketStatus(checkbox, ticket, index);
+                checkbox.onchange = () => updateTicketStatus(checkbox, ticket.content);
                 ticketContentDiv.appendChild(checkbox);
                     
             // Section for comments
@@ -183,36 +183,41 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     
     // Update ticket status
-    function updateTicketStatus(checkbox, ticket, ticketIndex) {
-        fetch(`/update_ticket/${ticketIndex}`, { method: 'POST' })
+    function updateTicketStatus(checkbox, ticketNumber) {
+        console.log(`Updating status for ticket number: ${ticketNumber}, Completed: ${checkbox.checked}`);
+        fetch(`/update_ticket/${ticketNumber}`, { method: 'POST' })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    ticket.completed = checkbox.checked;
-                    ticket.status = checkbox.checked ? 'Completed' : 'In Progress';
-                    fetchTickets(false).then(() => updateTaskCounts());
+                    console.log(`Ticket ${ticketNumber} status updated successfully.`);
+                    fetchTickets(isEmployeeDashboard).then(() => updateTaskCounts());
                 }
             });
-    }
+    };
     // Function to delete a ticket
-    window.deleteTicket = function(ticketIndex) {
-        fetch(`/delete_ticket/${ticketIndex}`, { method: 'DELETE' })
+    window.deleteTicket = function(ticketNumber) {
+        console.log("Deleting ticket number:", ticketNumber);
+        fetch(`/delete_ticket/${ticketNumber}`, { method: 'DELETE' })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    fetchTickets(true);
+                    console.log(`Ticket ${ticketNumber} deleted successfully.`);
+                    fetchTickets(isEmployeeDashboard);
                 }
             });
-    }
-    function reopenTicket(ticketIndex) {
-        fetch(`/reopen_ticket/${ticketIndex}`, { method: 'POST' })
+    };
+    function reopenTicket(ticketNumber) {
+        console.log("Reopening ticket number:", ticketNumber);
+        fetch(`/reopen_ticket/${ticketNumber}`, { method: 'POST' })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    fetchTickets(true);
+                    console.log(`Ticket ${ticketNumber} reopened successfully.`);
+                    fetchTickets(isEmployeeDashboard);
                 }
             });
-    }
+    };
+    
     function applyFilter() {
         const filterValue = document.getElementById('ticket_filter').value;
         fetchTickets(isEmployeeDashboard, filterValue);
