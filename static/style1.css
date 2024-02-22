@@ -30,7 +30,7 @@ h1 {
     max-width: 1000px;
 }
 
-/* Dynamic ticket styling based on priority and completion status */
+
 .ticket {
     border-left: 5px solid #2196f3;
     padding: 10px;
@@ -43,19 +43,19 @@ h1 {
 }
 
 .ticket[data-priority="urgent"] {
-    background-color: #ffcccc; /* Light red for urgent tickets */
-}
+    background-color: #ffcccc; }
+
 
 .ticket[data-priority="high"] {
-    background-color: #ffeda9; /* Orange for high priority tickets */
+    background-color: #ffeda9; 
 }
 
 .ticket[data-priority="low"] {
-    background-color: #eaf4ba; /* Light yellow for low priority tickets */
+    background-color: #eaf4ba; 
 }
 
 .ticket[data-completed="true"] {
-    background-color: #ccffcc; /* Green for completed tickets */
+    background-color: #ccffcc; 
     border-left-color: #4CAF50;
 }
 
@@ -105,7 +105,7 @@ textarea, select {
     padding: 10px;
 }
 
-/* Button styling */
+
 .delete-btn, .reopen {
     padding: 5px 10px;
     margin-top: 10px;
@@ -131,7 +131,7 @@ textarea, select {
     background-color: gold;
 }
 
-/* Responsive design for smaller screens */
+
 @media (max-width: 768px) {
     .form-container, .tickets-display, .task-summary, .tickets-list {
         width: 95%;
